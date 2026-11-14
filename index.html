@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>物料清单</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F7F5F0;--panel:#FFFFFF;--line:#E7E3DA;--line2:#D9D4C8;--ink:#15171A;--mute:#6F7277;--dim:#9AA0A6;--acc:#C8342B;--acc-soft:#FDF6F4}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:"JetBrains Mono",ui-monospace,Consolas,monospace}
+a{color:var(--acc)}
+header{position:sticky;top:0;z-index:10;background:rgba(247,245,240,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line2)}
+.hd{max-width:1080px;margin:0 auto;padding:26px 40px 20px;display:flex;align-items:flex-end;gap:28px}
+.kicker{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:3px;color:var(--dim)}
+h1{margin:10px 0 0;font-size:44px;font-weight:700;letter-spacing:-1px;line-height:1}
+.meta{margin-top:12px;font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--mute);letter-spacing:.4px}
+.btn{border:0;cursor:pointer;font:inherit;font-size:12.5px;font-weight:600;letter-spacing:.6px;height:42px;padding:0 20px;border-radius:4px;display:inline-flex;align-items:center;gap:10px;transition:background .12s}
+.btn-acc{background:var(--acc);color:#fff}
+.btn-acc:hover{background:#B12C24}
+.btn-acc:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+.bar2{max-width:1080px;margin:0 auto;padding:0 40px 16px;display:flex;align-items:center;gap:18px}
+.track{flex:1;height:2px;background:#E4DFD4;position:relative;overflow:hidden}
+.track>i{position:absolute;left:0;top:0;height:2px;background:var(--acc);width:0}
+.lnk{border:0;background:none;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.6px;color:var(--mute);cursor:pointer;padding:5px 8px}
+.lnk:hover{color:var(--ink)}
+.lnk:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+main{max-width:1080px;margin:0 auto;padding:6px 40px 8px}
+section{margin-top:34px}
+.shead{display:flex;align-items:center;gap:12px;padding-bottom:8px;border-bottom:1px solid var(--line2)}
+.dot{width:6px;height:6px;border-radius:1px;background:var(--acc)}
+.shead h2{margin:0;font-size:13px;font-weight:600;letter-spacing:2px}
+.shead .en{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:2px;color:#A9A49A;text-transform:uppercase}
+.shead .cnt{margin-left:auto;font-family:"JetBrains Mono",monospace;font-size:10.5px;color:var(--mute)}
+.row{display:grid;grid-template-columns:30px 22px 1fr 220px 86px 52px;align-items:center;gap:14px;height:46px;padding:0 10px;border-bottom:1px solid var(--line);cursor:pointer;position:relative}
+.row:hover{background:#FDFBF7}
+.row.on{background:var(--acc-soft)}
+.row.on::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--acc)}
+.idx{font-family:"JetBrains Mono",monospace;font-size:11px;color:#B3AEA4;text-align:right}
+.row.on .idx{color:#C08B82}
+.cbx{appearance:none;-webkit-appearance:none;width:16px;height:16px;margin:0;border:1.5px solid #C9C3B7;border-radius:3px;background:#fff;cursor:pointer;flex:0 0 auto;position:relative;transition:all .12s}
+.cbx:hover{border-color:#9E978A}
+.cbx:checked{background:var(--acc);border-color:var(--acc)}
+.cbx:checked::after{content:"";position:absolute;left:4px;top:1px;width:5px;height:8px;border:solid #fff;border-width:0 1.9px 1.9px 0;transform:rotate(42deg)}
+.cbx:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+.nm{font-size:13.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pkg{font-family:"JetBrains Mono",monospace;font-size:10.5px;color:var(--mute);text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mini{height:3px;background:#E9E5DB;border-radius:2px;overflow:hidden}
+.mini>i{display:block;height:3px;background:#CFC9BC}
+.row.on .mini>i{background:var(--acc)}
+.qty{font-family:"JetBrains Mono",monospace;font-size:15px;font-weight:600;text-align:right}
+.row.on .qty{color:var(--acc)}
+.foot{max-width:1080px;margin:0 auto;padding:26px 40px 80px;border-top:1px solid var(--line2);display:flex;gap:40px;font-size:11px;color:var(--mute);line-height:1.9}
+.foot p{margin:0}
+.foot .mono{letter-spacing:.4px;color:#A9A49A}
+.overlay{position:fixed;inset:0;background:rgba(20,22,25,.42);display:none;align-items:flex-start;justify-content:center;padding:96px 20px 20px;z-index:50}
+.overlay.show{display:flex}
+.sheet{width:640px;max-width:100%;background:var(--panel);border:1px solid var(--line2);border-radius:8px;box-shadow:0 24px 70px rgba(20,22,25,.28);max-height:calc(100vh - 120px);display:flex;flex-direction:column}
+.sheet .top{display:flex;align-items:center;gap:18px;padding:20px 22px 16px;border-bottom:1px solid var(--line)}
+.close{margin-left:6px;width:30px;height:30px;border:1px solid var(--line2);border-radius:4px;background:#fff;color:#8A8F96;font-size:16px;line-height:1;cursor:pointer}
+.tabs{display:flex;align-items:center;gap:22px;margin-left:auto}
+.tab{border:0;background:none;font:inherit;font-size:13px;font-weight:600;color:var(--mute);padding:6px 0;cursor:pointer;border-bottom:2px solid transparent;letter-spacing:.3px;display:inline-flex;align-items:center;gap:7px}
+.tab.on{color:var(--ink);border-bottom-color:var(--acc)}
+.tab:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+.tab .n{font-family:"JetBrains Mono",monospace;font-size:10.5px;font-weight:500;color:#A9A49A}
+.mlist{margin:0 22px;overflow:auto;padding:4px 12px 4px 0;flex:1;min-height:190px}
+.empty{padding:22px 0;font-size:12.5px;color:var(--mute)}
+.mrow{display:grid;grid-template-columns:28px 1fr 200px 44px;gap:12px;align-items:center;height:38px;border-bottom:1px solid var(--line)}
+.mrow:last-child{border-bottom:0}
+.mrow .idx{font-family:"JetBrains Mono",monospace;font-size:10.5px;color:#B3AEA4;text-align:left}
+.mrow .val{font-size:12.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mrow .pk2{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--mute);text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mrow .q{font-family:"JetBrains Mono",monospace;font-size:12.5px;font-weight:600;text-align:right;color:var(--acc)}
+.sfoot{display:flex;align-items:center;gap:14px;padding:14px 22px 18px;border-top:1px solid var(--line);margin-top:8px}
+.hint{font-family:"JetBrains Mono",monospace;font-size:10.5px;color:var(--mute);letter-spacing:.4px}
+@media (max-width:820px){
+  .hd{padding:20px 20px 14px;flex-wrap:wrap}
+  h1{font-size:34px}
+  .bar2{padding:0 20px 14px}
+  main{padding:6px 20px 8px}
+  .foot{padding:20px 20px 60px;flex-direction:column;gap:12px}
+  .row{grid-template-columns:24px 20px 1fr 64px;height:52px;gap:10px}
+  .row .pkg,.row .mini{display:none}
+  .sheet .top{flex-wrap:wrap}
+  .tabs{margin-left:0;width:100%;justify-content:flex-start}
+  .mlist{margin:0 16px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="hd">
+    <div style="flex:1;min-width:0">
+      <div class="kicker">SUNFOUNDER&nbsp;&nbsp;/&nbsp;&nbsp;TEST FIXTURE</div>
+      <h1>物料清单</h1>
+      <div class="meta">4 BOARDS × 2 SETS &nbsp;·&nbsp; 38 PARTS &nbsp;·&nbsp; 168 PCS</div>
+    </div>
+    <button class="btn btn-acc" id="btnExport">导出 <span class="mono" style="font-size:13px">↗</span></button>
+  </div>
+  <div class="bar2">
+    <div class="track"><i id="bar"></i></div>
+    <span class="mono" style="font-size:11px;color:var(--mute)">SELECTED <b id="cnt" style="color:var(--ink)">0</b>/38</span>
+    <button class="lnk" id="selAll">全选</button>
+    <button class="lnk" id="clr">清空</button>
+  </div>
+</header>
+
+<main id="list"></main>
+
+<div class="foot">
+  <p style="max-width:420px">勾选要采购的物料，点右上角「导出」。弹窗里分「勾选 / 未勾选」两份清单，点「复制」整段带走。</p>
+  <p class="mono">QTY = 4 BOARDS × 2 SETS<br>DNP PARTS EXCLUDED</p>
+</div>
+
+<div class="overlay" id="ov">
+  <div class="sheet">
+    <div class="top">
+      <div>
+        <div class="kicker">EXPORT — 制表符分隔</div>
+        <h2 style="margin:6px 0 0;font-size:20px;font-weight:600">导出清单</h2>
+      </div>
+      <div class="tabs">
+        <button class="tab on" data-tab="on">勾选 <span class="n" id="nOn">0</span></button>
+        <button class="tab" data-tab="off">未勾选 <span class="n" id="nOff">0</span></button>
+      </div>
+      <button class="close" id="close" aria-label="关闭">×</button>
+    </div>
+    <div class="mlist" id="mlist"></div>
+    <div class="sfoot">
+      <span class="hint" id="hint">共 2 列：物料 / 封装 / 数量</span>
+      <button class="btn btn-acc" id="btnCopy" style="margin-left:auto">复制清单</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = [["电阻", "RESISTORS", [["10K 1%", "贴片电阻 0603", 12], ["1K 1%", "贴片电阻 0603", 10], ["10K 1%", "贴片电阻 0402", 8], ["10R 1%", "贴片电阻 0402", 8], ["100K 1%", "贴片电阻 0402", 4], ["10K 1%", "贴片排阻 4D02 0402x4", 4], ["5mR 1W", "贴片电阻 1206", 4], ["22K 1%", "贴片电阻 0402", 2], ["22R 1%", "贴片电阻 0402", 2], ["24K 1%", "贴片电阻 0603", 2], ["56K 1%", "贴片电阻 0603", 2], ["6.8K 1%", "贴片电阻 0603", 2]]], ["电容", "CAPACITORS", [["100nF 16V", "贴片电容 0603", 10], ["100nF 16V", "贴片电容 0402", 10], ["1uF", "贴片电容 0603", 2]]], ["芯片 / 半导体", "SEMICONDUCTORS", [["AON7544", "PDFN-8-3.3x3.3-A", 14], ["BAT54S", "SOT-23-3", 8], ["INA226", "TSSOP-10_3x3mm_P0.5mm", 4], ["1N5819WS", "SOD-323", 2], ["5V TVS", "SOD-323", 2], ["ADS1115IDGS", "TSSOP-10_3x3mm_P0.5mm", 2], ["AO3400A", "SOT-23-3", 2], ["BSS138DW", "SOT-363-6", 2], ["CH224K", "SSOP-10-EP", 2], ["TCA9548A", "TSSOP-24_4.4x7.8mm_P0.65mm", 2]]], ["连接器", "CONNECTORS", [["Conn_01x06_MountingPin", "JST_SH_SM06B-SRSS-TB_1x06-1MP_P1.00mm_Horizontal", 12], ["Conn_01x02_Pin", "XH2.54 2P 卧式直插", 4], ["Conn_01x05_Pin", "PinHeader_1x05_P1.27mm_Vertical", 4], ["Conn_01x05_Pin", "PinSocket_1x05_P1.27mm_Vertical", 4], ["Conn_01x12_Pin", "排针 直立直插 2.54 01x12P 黑色", 4], ["10K B3950", "排针 直立直插 2.54 01x02P 黑色", 2], ["Conn_02x04_Odd_Even", "PinHeader_2x04_P2.54mm_Horizontal", 2], ["Conn_02x05_Odd_Even", "排针 直立直插 2.54 02x05P 黑色", 2], ["USB_C_Plug", "USB-C 3.0 公头 夹板 24脚 L=10.8 1.25A_Pin", 2], ["USB_C_Receptacle_USB2.0_16P", "USB-C 2.0 16P 母座 90度 5A", 2]]], ["其他", "OTHERS", [["SW_DPDT_x2", "拨动开关 6脚立式 两档六脚", 4], ["Buzzer", "无源蜂鸣器 贴片 5020", 2], ["Conn_01x02_Socket", "兼容防反接2P直插", 2]]]];
+const KEY = "sjw-bom-light-v2";
+let ticks = {}; try { ticks = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e) { ticks = {}; }
+let tab = "on";
+const flat = [];
+DATA.forEach((g, gi) => g[2].forEach((r, ri) => flat.push({ g: gi, r: ri, val: r[0], pkg: r[1], qty: r[2], k: gi + "-" + ri })));
+const TOTAL = flat.length;
+const save = () => localStorage.setItem(KEY, JSON.stringify(ticks));
+
+function render() {
+  const main = document.getElementById("list");
+  main.innerHTML = "";
+  let n = 0, on = 0;
+  DATA.forEach((g, gi) => {
+    const rows = g[2];
+    const total = rows.reduce((a, b) => a + b[2], 0);
+    const sec = document.createElement("section");
+    const sh = document.createElement("div");
+    sh.className = "shead";
+    sh.innerHTML = '<span class="dot"></span><h2></h2><span class="en"></span><span class="cnt"></span>';
+    sh.querySelector("h2").textContent = g[0];
+    sh.querySelector(".en").textContent = g[1];
+    sh.querySelector(".cnt").textContent = rows.length + " TYPES · " + total + " PCS";
+    sec.appendChild(sh);
+    rows.forEach((r, ri) => {
+      const k = gi + "-" + ri; n++;
+      const isOn = !!ticks[k]; if (isOn) on++;
+      const lab = document.createElement("label");
+      lab.className = "row" + (isOn ? " on" : "");
+      lab.innerHTML = '<span class="idx"></span><input type="checkbox" class="cbx"><span class="nm"></span><span class="pkg"></span><span class="mini"><i></i></span><span class="qty"></span>';
+      lab.querySelector(".idx").textContent = String(n).padStart(2, "0");
+      const cb = lab.querySelector(".cbx");
+      cb.checked = isOn;
+      cb.setAttribute("aria-label", r[0]);
+      cb.addEventListener("change", () => { if (cb.checked) ticks[k] = true; else delete ticks[k]; save(); render(); });
+      lab.querySelector(".nm").textContent = r[0];
+      lab.querySelector(".pkg").textContent = r[1];
+      lab.querySelector(".mini i").style.width = Math.round(r[2] / 14 * 100) + "%";
+      lab.querySelector(".qty").textContent = r[2];
+      lab.addEventListener("click", e => { if (e.target !== cb) { e.preventDefault(); cb.checked = !cb.checked; cb.dispatchEvent(new Event("change")); } });
+      sec.appendChild(lab);
+    });
+    main.appendChild(sec);
+  });
+  document.getElementById("cnt").textContent = on;
+  document.getElementById("bar").style.width = Math.round(on / TOTAL * 100) + "%";
+  document.getElementById("nOn").textContent = on;
+  document.getElementById("nOff").textContent = flat.length - on;
+  if (document.getElementById("ov").classList.contains("show")) renderModal();
+}
+function rowsFor(t) { return flat.filter(x => t === "on" ? ticks[x.k] : !ticks[x.k]); }
+function renderModal() {
+  const list = document.getElementById("mlist");
+  list.innerHTML = "";
+  const rows = rowsFor(tab);
+  if (!rows.length) {
+    const d = document.createElement("div");
+    d.className = "empty";
+    d.textContent = tab === "on" ? "还没有勾选物料，回到列表勾几项再导出。" : "全部物料都已勾选。";
+    list.appendChild(d);
+    return;
+  }
+  rows.forEach((r, i) => {
+    const d = document.createElement("div");
+    d.className = "mrow";
+    d.innerHTML = '<span class="idx"></span><span class="val"></span><span class="pk2"></span><span class="q"></span>';
+    d.querySelector(".idx").textContent = String(i + 1).padStart(2, "0");
+    d.querySelector(".val").textContent = r.val;
+    d.querySelector(".pk2").textContent = r.pkg;
+    d.querySelector(".q").textContent = "×" + r.qty;
+    list.appendChild(d);
+  });
+}
+function listText() {
+  const rows = rowsFor(tab);
+  if (!rows.length) return tab === "on" ? "（还没有勾选物料）" : "（全部已勾选）";
+  return rows.map(r => r.val + "\t" + r.pkg + "\t×" + r.qty).join("\n");
+}
+document.getElementById("btnExport").addEventListener("click", () => {
+  document.getElementById("ov").classList.add("show");
+  renderModal();
+});
+document.getElementById("close").addEventListener("click", () => document.getElementById("ov").classList.remove("show"));
+document.getElementById("ov").addEventListener("click", e => { if (e.target.id === "ov") document.getElementById("ov").classList.remove("show"); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") document.getElementById("ov").classList.remove("show"); });
+document.querySelectorAll(".tab").forEach(b => b.addEventListener("click", () => {
+  tab = b.dataset.tab;
+  document.querySelectorAll(".tab").forEach(x => x.classList.toggle("on", x.dataset.tab === tab));
+  renderModal();
+}));
+document.getElementById("btnCopy").addEventListener("click", async () => {
+  const t = listText();
+  try { await navigator.clipboard.writeText(t); }
+  catch (e) {
+    const ta = document.createElement("textarea");
+    ta.value = t; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove();
+  }
+  const h = document.getElementById("hint");
+  h.textContent = "已复制 " + rowsFor(tab).length + " 条，可直接粘贴";
+  h.style.color = "#C8342B";
+});
+document.getElementById("selAll").addEventListener("click", () => { flat.forEach(x => ticks[x.k] = true); save(); render(); });
+document.getElementById("clr").addEventListener("click", () => { ticks = {}; save(); render(); });
+render();
+if (location.hash.indexOf("export") >= 0) {
+  if (location.hash.indexOf("off") >= 0) {
+    tab = "off";
+    document.querySelectorAll(".tab").forEach(x => x.classList.toggle("on", x.dataset.tab === tab));
+  }
+  document.getElementById("ov").classList.add("show");
+  renderModal();
+}
+</script>
+</body>
+</html>

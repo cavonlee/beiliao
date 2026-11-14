@@ -1,0 +1,38 @@
+name: expire
+
+# 满 3 天自动下线：把页面换成「已过期」，并删除 Pages（跑在 GitHub 上，与本地是否开机无关）
+on:
+  schedule:
+    - cron: "17 1 * * *"   # 每天 UTC 01:17（北京时间 09:17）
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  expire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 判断年龄并下线
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          created=$(gh api "repos/$REPO" --jq .created_at)
+          created_s=$(date -d "$created" +%s)
+          now=$(date +%s)
+          age=$(( (now - created_s) / 86400 ))
+          echo "created=$created age=${age}d"
+          if [ "$age" -ge 3 ]; then
+            printf '%s' '<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>已过期</title><body style="margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;font:15px/1.7 -apple-system,Segoe UI,Microsoft YaHei,sans-serif;color:#555;background:#F7F5F0"><div style="text-align:center"><div style="font-size:20px;color:#15171A">这份备料清单已到期</div><p style="margin:8px 0 0">按约定保留 3 天，现已自动下线。</p></div></body></html>' > index.html
+            git config user.name "expire-bot"
+            git config user.email "actions@users.noreply.github.com"
+            git add index.html
+            git commit -m "expire: shut the page down after 3 days" || true
+            git push || true
+            gh api -X DELETE "repos/$REPO/pages" || true
+            echo "pages deleted"
+          fi
