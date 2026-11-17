@@ -36,6 +36,7 @@ section{margin-top:34px}
 .shead .en{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:2px;color:#A9A49A;text-transform:uppercase}
 .shead .cnt{margin-left:auto;font-family:"JetBrains Mono",monospace;font-size:10.5px;color:var(--mute)}
 .row{display:grid;grid-template-columns:30px 22px minmax(0,1fr) 300px 90px 56px;grid-template-areas:"i c n p b q";align-items:center;gap:14px;height:46px;padding:0 10px;border-bottom:1px solid var(--line);cursor:pointer;position:relative}
+.subhead{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:1.6px;color:#8A8D92;padding:16px 10px 6px}
 .thead{display:grid;grid-template-columns:30px 22px minmax(0,1fr) 300px 90px 56px;gap:14px;padding:10px 10px 8px;border-bottom:1px solid var(--line2);font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:2px;color:#A9A49A;text-transform:uppercase}
 .thead span:nth-child(1){grid-column:1}.thead span:nth-child(2){grid-column:3}.thead span:nth-child(3){grid-column:4}.thead span:nth-child(4){grid-column:6;text-align:right}
 .row:hover{background:#FDFBF7}
@@ -147,12 +148,12 @@ section{margin-top:34px}
 </div>
 
 <script>
-const DATA = [["电阻", "RESISTORS", [["10K 1%", "贴片电阻 0603", 12], ["1K 1%", "贴片电阻 0603", 10], ["10K 1%", "贴片电阻 0402", 8], ["10R 1%", "贴片电阻 0402", 8], ["100K 1%", "贴片电阻 0402", 4], ["10K 1%", "贴片排阻 4D02 0402x4", 4], ["5mR 1W", "贴片电阻 1206", 4], ["22K 1%", "贴片电阻 0402", 2], ["22R 1%", "贴片电阻 0402", 2], ["24K 1%", "贴片电阻 0603", 2], ["56K 1%", "贴片电阻 0603", 2], ["6.8K 1%", "贴片电阻 0603", 2]]], ["电容", "CAPACITORS", [["100nF 16V", "贴片电容 0603", 10], ["100nF 16V", "贴片电容 0402", 10], ["1uF", "贴片电容 0603", 2]]], ["芯片 / 半导体", "SEMICONDUCTORS", [["AON7544", "PDFN-8-3.3x3.3-A", 14], ["BAT54S", "SOT-23-3", 8], ["INA226", "TSSOP-10_3x3mm_P0.5mm", 4], ["1N5819WS", "SOD-323", 2], ["5V TVS", "SOD-323", 2], ["ADS1115IDGS", "TSSOP-10_3x3mm_P0.5mm", 2], ["AO3400A", "SOT-23-3", 2], ["BSS138DW", "SOT-363-6", 2], ["CH224K", "SSOP-10-EP", 2], ["TCA9548A", "TSSOP-24_4.4x7.8mm_P0.65mm", 2]]], ["连接器", "CONNECTORS", [["Conn_01x06_MountingPin", "JST_SH_SM06B-SRSS-TB_1x06-1MP_P1.00mm_Horizontal", 12], ["Conn_01x02_Pin", "XH2.54 2P 卧式直插", 4], ["Conn_01x05_Pin", "PinHeader_1x05_P1.27mm_Vertical", 4], ["Conn_01x05_Pin", "PinSocket_1x05_P1.27mm_Vertical", 4], ["Conn_01x12_Pin", "排针 直立直插 2.54 01x12P 黑色", 4], ["10K B3950", "排针 直立直插 2.54 01x02P 黑色", 2], ["Conn_02x04_Odd_Even", "PinHeader_2x04_P2.54mm_Horizontal", 2], ["Conn_02x05_Odd_Even", "排针 直立直插 2.54 02x05P 黑色", 2], ["USB_C_Plug", "USB-C 3.0 公头 夹板 24脚 L=10.8 1.25A_Pin", 2], ["USB_C_Receptacle_USB2.0_16P", "USB-C 2.0 16P 母座 90度 5A", 2]]], ["其他", "OTHERS", [["SW_DPDT_x2", "拨动开关 6脚立式 两档六脚", 4], ["Buzzer", "无源蜂鸣器 贴片 5020", 2], ["Conn_01x02_Socket", "兼容防反接2P直插", 2]]]];
-const KEY = "sjw-bom-light-v2";
+const DATA = [["电阻", "RESISTORS", [["0402", [["10R 1%", "贴片电阻 0402", 8], ["22R 1%", "贴片电阻 0402", 2], ["10K 1%", "贴片电阻 0402", 8], ["22K 1%", "贴片电阻 0402", 2], ["100K 1%", "贴片电阻 0402", 4]]], ["0603", [["1K 1%", "贴片电阻 0603", 10], ["6.8K 1%", "贴片电阻 0603", 2], ["10K 1%", "贴片电阻 0603", 12], ["24K 1%", "贴片电阻 0603", 2], ["56K 1%", "贴片电阻 0603", 2]]], ["1206", [["5mR 1W", "贴片电阻 1206", 4]]], ["排阻 4D02", [["10K 1%", "贴片排阻 4D02 0402x4", 4]]]]], ["电容", "CAPACITORS", [["0402", [["100nF 16V", "贴片电容 0402", 10]]], ["0603", [["100nF 16V", "贴片电容 0603", 10], ["1uF", "贴片电容 0603", 2]]]]], ["芯片 / 半导体", "SEMICONDUCTORS", [["", [["AON7544", "PDFN-8-3.3x3.3-A", 14], ["BAT54S", "SOT-23-3", 8], ["INA226", "TSSOP-10_3x3mm_P0.5mm", 4], ["1N5819WS", "SOD-323", 2], ["5V TVS", "SOD-323", 2], ["ADS1115IDGS", "TSSOP-10_3x3mm_P0.5mm", 2], ["AO3400A", "SOT-23-3", 2], ["BSS138DW", "SOT-363-6", 2], ["CH224K", "SSOP-10-EP", 2], ["TCA9548A", "TSSOP-24_4.4x7.8mm_P0.65mm", 2]]]]], ["连接器", "CONNECTORS", [["", [["Conn_01x06_MountingPin", "JST_SH_SM06B-SRSS-TB_1x06-1MP_P1.00mm_Horizontal", 12], ["Conn_01x02_Pin", "XH2.54 2P 卧式直插", 4], ["Conn_01x05_Pin", "PinHeader_1x05_P1.27mm_Vertical", 4], ["Conn_01x05_Pin", "PinSocket_1x05_P1.27mm_Vertical", 4], ["Conn_01x12_Pin", "排针 直立直插 2.54 01x12P 黑色", 4], ["10K B3950", "排针 直立直插 2.54 01x02P 黑色", 2], ["Conn_02x04_Odd_Even", "PinHeader_2x04_P2.54mm_Horizontal", 2], ["Conn_02x05_Odd_Even", "排针 直立直插 2.54 02x05P 黑色", 2], ["USB_C_Plug", "USB-C 3.0 公头 夹板 24脚 L=10.8 1.25A_Pin", 2], ["USB_C_Receptacle_USB2.0_16P", "USB-C 2.0 16P 母座 90度 5A", 2]]]]], ["其他", "OTHERS", [["", [["SW_DPDT_x2", "拨动开关 6脚立式 两档六脚", 4], ["Buzzer", "无源蜂鸣器 贴片 5020", 2], ["Conn_01x02_Socket", "兼容防反接2P直插", 2]]]]]];
+const KEY = "sjw-bom-light-v3";
 let ticks = {}; try { ticks = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e) { ticks = {}; }
 let tab = "on";
 const flat = [];
-DATA.forEach((g, gi) => g[2].forEach((r, ri) => flat.push({ g: gi, r: ri, val: r[0], pkg: r[1], qty: r[2], k: gi + "-" + ri })));
+DATA.forEach((g, gi) => g[2].forEach((sub) => sub[1].forEach((r) => flat.push({ val: r[0], pkg: r[1], qty: r[2], k: r[0] + "|" + r[1] }))));
 const TOTAL = flat.length;
 const save = () => localStorage.setItem(KEY, JSON.stringify(ticks));
 
@@ -160,34 +161,43 @@ function render() {
   const main = document.getElementById("list");
   main.innerHTML = "";
   let n = 0, on = 0;
-  DATA.forEach((g, gi) => {
-    const rows = g[2];
-    const total = rows.reduce((a, b) => a + b[2], 0);
+  DATA.forEach((g) => {
+    const subs = g[2];
+    const total = subs.reduce((a, sub) => a + sub[1].reduce((x, r) => x + r[2], 0), 0);
+    const kinds = subs.reduce((a, sub) => a + sub[1].length, 0);
     const sec = document.createElement("section");
     const sh = document.createElement("div");
     sh.className = "shead";
     sh.innerHTML = '<span class="dot"></span><h2></h2><span class="en"></span><span class="cnt"></span>';
     sh.querySelector("h2").textContent = g[0];
     sh.querySelector(".en").textContent = g[1];
-    sh.querySelector(".cnt").textContent = rows.length + " TYPES · " + total + " PCS";
+    sh.querySelector(".cnt").textContent = kinds + " TYPES · " + total + " PCS";
     sec.appendChild(sh);
-    rows.forEach((r, ri) => {
-      const k = gi + "-" + ri; n++;
-      const isOn = !!ticks[k]; if (isOn) on++;
-      const lab = document.createElement("label");
-      lab.className = "row" + (isOn ? " on" : "");
-      lab.innerHTML = '<span class="idx"></span><input type="checkbox" class="cbx"><span class="nm"></span><span class="pkg"></span><span class="mini"><i></i></span><span class="qty"></span>';
-      lab.querySelector(".idx").textContent = String(n).padStart(2, "0");
-      const cb = lab.querySelector(".cbx");
-      cb.checked = isOn;
-      cb.setAttribute("aria-label", r[0]);
-      cb.addEventListener("change", () => { if (cb.checked) ticks[k] = true; else delete ticks[k]; save(); render(); });
-      lab.querySelector(".nm").textContent = r[0];
-      lab.querySelector(".pkg").textContent = r[1];
-      lab.querySelector(".mini i").style.width = Math.round(r[2] / 14 * 100) + "%";
-      lab.querySelector(".qty").textContent = r[2];
-      lab.addEventListener("click", e => { if (e.target !== cb) { e.preventDefault(); cb.checked = !cb.checked; cb.dispatchEvent(new Event("change")); } });
-      sec.appendChild(lab);
+    subs.forEach((sub) => {
+      if (sub[0]) {
+        const h = document.createElement("div");
+        h.className = "subhead";
+        h.textContent = sub[0] + "  ·  " + sub[1].length;
+        sec.appendChild(h);
+      }
+      sub[1].forEach((r) => {
+        const k = r[0] + "|" + r[1]; n++;
+        const isOn = !!ticks[k]; if (isOn) on++;
+        const lab = document.createElement("label");
+        lab.className = "row" + (isOn ? " on" : "");
+        lab.innerHTML = '<span class="idx"></span><input type="checkbox" class="cbx"><span class="nm"></span><span class="pkg"></span><span class="mini"><i></i></span><span class="qty"></span>';
+        lab.querySelector(".idx").textContent = String(n).padStart(2, "0");
+        const cb = lab.querySelector(".cbx");
+        cb.checked = isOn;
+        cb.setAttribute("aria-label", r[0]);
+        cb.addEventListener("change", () => { if (cb.checked) ticks[k] = true; else delete ticks[k]; save(); render(); });
+        lab.querySelector(".nm").textContent = r[0];
+        lab.querySelector(".pkg").textContent = r[1];
+        lab.querySelector(".mini i").style.width = Math.round(r[2] / 14 * 100) + "%";
+        lab.querySelector(".qty").textContent = r[2];
+        lab.addEventListener("click", e => { if (e.target !== cb) { e.preventDefault(); cb.checked = !cb.checked; cb.dispatchEvent(new Event("change")); } });
+        sec.appendChild(lab);
+      });
     });
     main.appendChild(sec);
   });
