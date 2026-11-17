@@ -92,9 +92,20 @@ section{margin-top:34px}
   main{padding:0 20px 8px}
   .shead{flex-wrap:wrap;gap:4px 10px}
   .shead .cnt{margin-left:auto}
-  .sheet .top{flex-wrap:wrap}
-  .tabs{margin-left:0;width:100%;justify-content:flex-start}
-  .mlist{margin:0 16px}
+  .overlay{padding:12px 10px}
+  .sheet{max-height:calc(100vh - 24px)}
+  .sheet .top{flex-wrap:wrap;position:relative;padding:16px 16px 10px;gap:10px}
+  .sheet .top>div:first-child{padding-right:34px}
+  .close{position:absolute;top:12px;right:12px;margin:0}
+  .tabs{margin-left:0;width:100%;justify-content:flex-start;gap:18px;margin-top:4px}
+  .mlist{margin:0 16px;padding:2px 4px 2px 0;min-height:120px}
+  .mrow{grid-template-columns:minmax(0,1fr) 46px;grid-template-areas:"v q" "p q";gap:2px 10px;height:auto;padding:9px 0;align-items:center}
+  .mrow .idx{display:none}
+  .mrow .val{grid-area:v}
+  .mrow .pk2{grid-area:p;text-align:left;white-space:normal;overflow:visible;text-overflow:clip;font-size:9.5px;line-height:1.3}
+  .mrow .q{grid-area:q;align-self:start}
+  .sfoot{padding:12px 16px 16px;gap:10px;flex-wrap:wrap}
+  .sfoot .btn{width:100%}
 }
 </style>
 </head>
@@ -141,7 +152,7 @@ section{margin-top:34px}
     </div>
     <div class="mlist" id="mlist"></div>
     <div class="sfoot">
-      <span class="hint" id="hint">共 2 列：物料 / 封装 / 数量</span>
+      <span class="hint" id="hint">共 3 列：物料 / 封装 / 数量</span>
       <button class="btn btn-acc" id="btnCopy" style="margin-left:auto">复制清单</button>
     </div>
   </div>
@@ -149,7 +160,7 @@ section{margin-top:34px}
 
 <script>
 const DATA = [["电阻", "RESISTORS", [["0402", [["10R 1%", "贴片电阻 0402", 8], ["22R 1%", "贴片电阻 0402", 2], ["10K 1%", "贴片电阻 0402", 8], ["22K 1%", "贴片电阻 0402", 2], ["100K 1%", "贴片电阻 0402", 4]]], ["0603", [["1K 1%", "贴片电阻 0603", 10], ["6.8K 1%", "贴片电阻 0603", 2], ["10K 1%", "贴片电阻 0603", 12], ["24K 1%", "贴片电阻 0603", 2], ["56K 1%", "贴片电阻 0603", 2]]], ["1206", [["5mR 1W", "贴片电阻 1206", 4]]], ["排阻 4D02", [["10K 1%", "贴片排阻 4D02 0402x4", 4]]]]], ["电容", "CAPACITORS", [["0402", [["100nF 16V", "贴片电容 0402", 10]]], ["0603", [["100nF 16V", "贴片电容 0603", 10], ["1uF", "贴片电容 0603", 2]]]]], ["芯片 / 半导体", "SEMICONDUCTORS", [["", [["AON7544", "PDFN-8-3.3x3.3-A", 14], ["BAT54S", "SOT-23-3", 8], ["INA226", "TSSOP-10_3x3mm_P0.5mm", 4], ["1N5819WS", "SOD-323", 2], ["5V TVS", "SOD-323", 2], ["ADS1115IDGS", "TSSOP-10_3x3mm_P0.5mm", 2], ["AO3400A", "SOT-23-3", 2], ["BSS138DW", "SOT-363-6", 2], ["CH224K", "SSOP-10-EP", 2], ["TCA9548A", "TSSOP-24_4.4x7.8mm_P0.65mm", 2]]]]], ["连接器", "CONNECTORS", [["", [["Conn_01x06_MountingPin", "JST_SH_SM06B-SRSS-TB_1x06-1MP_P1.00mm_Horizontal", 12], ["Conn_01x02_Pin", "XH2.54 2P 卧式直插", 4], ["Conn_01x05_Pin", "PinHeader_1x05_P1.27mm_Vertical", 4], ["Conn_01x05_Pin", "PinSocket_1x05_P1.27mm_Vertical", 4], ["Conn_01x12_Pin", "排针 直立直插 2.54 01x12P 黑色", 4], ["10K B3950", "排针 直立直插 2.54 01x02P 黑色", 2], ["Conn_02x04_Odd_Even", "PinHeader_2x04_P2.54mm_Horizontal", 2], ["Conn_02x05_Odd_Even", "排针 直立直插 2.54 02x05P 黑色", 2], ["USB_C_Plug", "USB-C 3.0 公头 夹板 24脚 L=10.8 1.25A_Pin", 2], ["USB_C_Receptacle_USB2.0_16P", "USB-C 2.0 16P 母座 90度 5A", 2]]]]], ["其他", "OTHERS", [["", [["SW_DPDT_x2", "拨动开关 6脚立式 两档六脚", 4], ["Buzzer", "无源蜂鸣器 贴片 5020", 2], ["Conn_01x02_Socket", "兼容防反接2P直插", 2]]]]]];
-const KEY = "sjw-bom-light-v3";
+const KEY = "sjw-bom-light-v4";   // v4：默认全部未勾选（旧版勾选不带过来）
 let ticks = {}; try { ticks = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e) { ticks = {}; }
 let tab = "on";
 const flat = [];
